@@ -1,0 +1,26 @@
+cache:
+  key: "$CI_BUILD_REF"
+  paths:
+    - node_modules/
+
+test:
+  stage: test
+  script:
+    - npm install
+    - npm run test
+  coverage: '/All\s+files\s+[|]\s+([\d.]+)/'
+  artifacts:
+    paths:
+      - ./coverage
+
+pages:
+  stage: deploy
+  script:
+    - mv doc public
+    - mv coverage public/coverage/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
